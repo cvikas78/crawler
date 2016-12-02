@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 public class Crawler {
 	static HashSet<String> hSet = new HashSet<String>();
 	static String domain;
+	static int spaceCount = 0;
 	public static void main(String[] args) throws InterruptedException {
 	/*
 	 * USe setProxy() if you are behind proxy.
@@ -25,6 +26,7 @@ public class Crawler {
 	}
 
 	public static void crawl(String url) {
+		
 		try {
 			Document doc = Jsoup.connect(url).timeout(0).get();
 			
@@ -35,14 +37,18 @@ public class Crawler {
 			for (Element link : links) {
 				if (link.attr("href").contains(domain) && !hSet.contains(link.attr("abs:href"))) {
 					hSet.add(link.attr("abs:href"));
-					System.out.println(link.attr("abs:href"));
+					spaceCount+=4;
+					String res = String.format("%"+ spaceCount + "s", "|-->"+link.attr("abs:href"));
+					System.out.println(res);
+					
 					crawl(link.attr("abs:href"));
 				}
-			}
+			}	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		spaceCount-=4;
 	}
 
 
