@@ -33,6 +33,7 @@
 
     <target name="run" depends="jar">
         <java classname="${main-class}" fork="true" >
+        	<arg value="${url}"/>
         <classpath>
             <path refid="classpath" />
             <path location="${jar.dir}/${ant.project.name}.jar" />

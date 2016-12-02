@@ -1,6 +1,8 @@
 package webcrawler;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 
 import org.jsoup.Jsoup;
@@ -10,13 +12,16 @@ import org.jsoup.select.Elements;
 
 public class Crawler {
 	static HashSet<String> hSet = new HashSet<String>();
-
+	static String domain;
 	public static void main(String[] args) throws InterruptedException {
 	/*
 	 * USe setProxy() if you are behind proxy.
 	 */
-		setProxy();
-		crawl("http://wiprodigital.com/");
+	setProxy();
+	domain = getDomainName(args[0]);
+	System.out.println("domain = " + domain);
+	System.out.println("\nSite Map :");
+	crawl(args[0]);
 	}
 
 	public static void crawl(String url) {
@@ -28,7 +33,7 @@ public class Crawler {
 			
 			/* iterate through links, print the link only if it is not already navigated */
 			for (Element link : links) {
-				if (link.attr("href").contains("wiprodigital.com") && !hSet.contains(link.attr("abs:href"))) {
+				if (link.attr("href").contains(domain) && !hSet.contains(link.attr("abs:href"))) {
 					hSet.add(link.attr("abs:href"));
 					System.out.println(link.attr("abs:href"));
 					crawl(link.attr("abs:href"));
@@ -41,6 +46,18 @@ public class Crawler {
 	}
 
 
+	public static String getDomainName(String url) {
+	    URI uri=null;
+		try {
+			uri = new URI(url);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    String domain = uri.getHost();
+	    return domain.startsWith("www.") ? domain.substring(4) : domain;
+	}
+	
 	public static void setProxy() {
 		System.setProperty("http.proxyHost", "103.27.171.32");
 		System.setProperty("http.proxyPort", "80");

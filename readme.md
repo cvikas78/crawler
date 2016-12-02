@@ -8,6 +8,6 @@ Java
 Apache Ant (https://ant.apache.org/) to be installed.
 
 ## How to run ?
-Download the project and execute the command "ant main" from the project home folder.
+Download the project and execute the command "ant main -Durl=http://wiprodigital.com/" from the project home folder.
 
  
