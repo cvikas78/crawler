@@ -22,7 +22,11 @@ public class Crawler {
 	public static void crawl(String url) {
 		try {
 			Document doc = Jsoup.connect(url).timeout(0).get();
+			
+			/* Look for all navigation links */
 			Elements links = doc.select("a.wd-navbar-nav-elem-link");
+			
+			/* iterate through links, print the link only if it is not already navigated */
 			for (Element link : links) {
 				if (link.attr("href").contains("wiprodigital.com") && !hSet.contains(link.attr("abs:href"))) {
 					hSet.add(link.attr("abs:href"));
