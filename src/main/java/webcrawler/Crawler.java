@@ -31,17 +31,18 @@ public class Crawler {
 			Document doc = Jsoup.connect(url).timeout(0).get();
 			
 			/* Look for all navigation links */
-			Elements links = doc.select("a.wd-navbar-nav-elem-link");
+			Elements links = doc.select("a[href]");
 			
 			/* iterate through links, print the link only if it is not already navigated */
 			for (Element link : links) {
-				if (link.attr("href").contains(domain) && !hSet.contains(link.attr("abs:href"))) {
-					hSet.add(link.attr("abs:href"));
+				String linkURL = link.attr("abs:href");
+				if (getDomainName(linkURL).equals(domain) && !hSet.contains(linkURL)) {
+					hSet.add(linkURL);
 					spaceCount+=4;
-					String res = String.format("%"+ spaceCount + "s", "|-->"+link.attr("abs:href"));
+					String res = String.format("%"+ spaceCount + "s", "|-->"+linkURL);
 					System.out.println(res);
 					
-					crawl(link.attr("abs:href"));
+					crawl(linkURL);
 				}
 			}	
 		} catch (IOException e) {
@@ -53,6 +54,10 @@ public class Crawler {
 
 
 	public static String getDomainName(String url) {
+		if (url == null || url.equals("") ) {
+			return "";
+		}
+
 	    URI uri=null;
 		try {
 			uri = new URI(url);
@@ -61,7 +66,8 @@ public class Crawler {
 			e.printStackTrace();
 		}
 	    String domain = uri.getHost();
-	    return domain.startsWith("www.") ? domain.substring(4) : domain;
+	    String domainString = domain.startsWith("www.") ? domain.substring(4) : domain;
+	    return domainString;
 	}
 	
 	public static void setProxy() {
